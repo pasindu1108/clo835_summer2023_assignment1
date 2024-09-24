@@ -31,8 +31,8 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
       with:
-          registries: |
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          registries: 
+           657093102493.dkr.ecr.us-east-1.amazonaws.com/mysql
           mask-password: false
           registry-type: private
           skip-logout: false
