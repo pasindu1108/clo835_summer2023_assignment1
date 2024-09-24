@@ -32,6 +32,7 @@ jobs:
     - name: Build and push the webapp Docker image
       run: |
         # Define the ECR repository URI
+        echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
         ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/webapp
         
         # Build the webapp image
