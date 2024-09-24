@@ -25,7 +25,16 @@ jobs:
     - name: Debug AWS Region
       run: echo "AWS_REGION:${{ secrets.AWS_REGION }}"
 
-            
+     # Step 3: Log in to Amazon ECR using AWS credentials
+    - name: Log in to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+          Region: us-east-1
+          registries: 657093102493.dkr.ecr.us-east-1.amazonaws.com
+          mask-password: false
+          registry-type: private
+          skip-logout: false
   
 
     # Step 4: Build, tag, and push the WebApp Docker image
