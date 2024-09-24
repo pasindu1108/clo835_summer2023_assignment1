@@ -46,7 +46,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry-type: 'public'
-          registries: 657093102493
+          registries: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           mask-password: true 
 
       # Step 4: Build, tag, and push the WebApp Docker image
