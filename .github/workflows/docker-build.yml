@@ -1,5 +1,3 @@
-name: Build and Push Docker Images to ECR
-
 # Trigger the action when changes are pushed to the master branch
 on:
   push:
@@ -11,58 +9,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the code from the repository
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      # Step 1: Check out the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    # Step 2: Set up Docker Buildx
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
     
-    - name: Debug AWS Account ID
-      run: echo "AWS_ACCOUNT_ID:${{ secrets.AWS_ACCOUNT_ID }}"
+      - name: Debug AWS Account ID
+        run: echo "AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}"
 
-    - name: Debug AWS Region
-      run: echo "AWS_REGION:${{ secrets.AWS_REGION }}"
+      - name: Debug AWS Region
+        run: echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
 
-     # Step 3: Log in to Amazon ECR using AWS credentials
-    - name: Log in to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-      with:
-          Region: us-east-1
-          registries: 657093102493.dkr.ecr.us-east-1.amazonaws.com
+      # Step 3: Log in to Amazon ECR using AWS credentials
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: 'ecr'
+          registries: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
           mask-password: false
-          registry-type: private
           skip-logout: false
-  
 
-    # Step 4: Build, tag, and push the WebApp Docker image
-    - name: Build and push the webapp Docker image
-      run: |
-        # Define the ECR repository URI
-        ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/webapp
-        
-        # Build the webapp image
-        docker build -t webapp .
-        
-        # Tag the image for ECR
-        docker tag webapp:latest $ECR_URI:latest
-        
-        # Push the image to ECR
-        docker push $ECR_URI:latest
+      # Step 4: Build, tag, and push the WebApp Docker image
+      - name: Build and push the webapp Docker image
+        run: |
+          # Define the ECR repository URI
+          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/webapp
+          
+          # Build the webapp image
+          docker build -t webapp .
+          
+          # Tag the image for ECR
+          docker tag webapp:latest $ECR_URI:latest
+          
+          # Push the image to ECR
+          docker push $ECR_URI:latest
 
-    # Step 5: Build, tag, and push the MySQL Docker image
-    - name: Build and push the MySQL Docker image
-      run: |
-        # Define the ECR repository URI
-        ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mysql
-        
-        # Pull the official MySQL image
-        docker pull mysql:latest
-        
-        # Tag the image for ECR
-        docker tag mysql:latest $ECR_URI:latest
-        
-        # Push the image to ECR
-        docker push $ECR_URI:latest
+      # Step 5: Build, tag, and push the MySQL Docker image
+      - name: Build and push the MySQL Docker image
+        run: |
+          # Define the ECR repository URI
+          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mysql
+          
+          # Pull the official MySQL image
+          docker pull mysql:latest
+          
+          # Tag the image for ECR
+          docker tag mysql:latest $ECR_URI:latest
+          
+          # Push the image to ECR
+          docker push $ECR_URI:latest
