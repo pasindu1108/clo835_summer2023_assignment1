@@ -30,6 +30,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Set your AWS region here
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
       # Optional: Debug AWS Account ID and Region (Comment out in production)
       - name: Debug AWS Account ID
