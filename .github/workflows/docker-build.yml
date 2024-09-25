@@ -1,6 +1,5 @@
-name: Build and Push Docker Image to ECR
+name: Build and Push Docker Image
 
-# Trigger the workflow on push to the master branch
 on:
   push:
     branches:
@@ -9,35 +8,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Step 1: Checkout the repository code
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # Step 2: Log in to Amazon ECR
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          region: ${{ secrets.AWS_REGION }}
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: <region>  # e.g., us-west-2
 
-      # Step 3: Set up Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Log in to Amazon ECR
+      run: |
+        echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 
-      # Step 4: Build and push the Docker image to ECR
-      - name: Build and push image to ECR
-        run: |
-          # Define the image URI
-          IMAGE_URI=${{ secrets.ECR_REPOSITORY_URL }}:latest
+    - name: Build Docker image
+      run: |
+        docker build -t your-image-name .
 
-          # Build the Docker image
-          docker build -t $IMAGE_URI .
+    - name: Tag Docker image
+      run: |
+        docker tag your-image-name:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/your-repo-name:latest
 
-          # Push the Docker image to Amazon ECR
-          docker push $IMAGE_URI
-
-      # Step 5: Log the pushed image URI
-      - name: Output image URI
-        run: echo "Pushed Docker image: ${{ secrets.ECR_REPOSITORY_URL }}:latest"
+    - name: Push Docker image to Amazon ECR
+      run: |
+        docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/your-repo-name:latest
