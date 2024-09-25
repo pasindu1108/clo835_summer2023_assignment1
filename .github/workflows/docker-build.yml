@@ -33,8 +33,10 @@ jobs:
         # Tag the image for ECR
         docker tag mysql:latest $ECR_URI:latest
         
+         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URI
+
         # Push the image to ECR
-        docker push $ECR_URI:latest
+          docker push $ECR_URI:latest
 
     
 
