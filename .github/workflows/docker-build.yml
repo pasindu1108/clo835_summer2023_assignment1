@@ -25,28 +25,18 @@ jobs:
 
     - name: Log in to Amazon ECR
       run: |
-       ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/webapp
+       ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mysql
 
         # Build the webapp image
-        docker build -t webapp .
+        docker build -t mysql .
         
         # Tag the image for ECR
-        docker tag webapp:latest $ECR_URI:latest
+        docker tag mysql:latest $ECR_URI:latest
         
         # Push the image to ECR
         docker push $ECR_URI:latest
 
-    - name: Build Docker image
-      run: |
-        docker build -t your-image-name .
-
-    - name: Tag Docker image
-      run: |
-        docker tag your-image-name:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/your-repo-name:latest
-
-    - name: Push Docker image to Amazon ECR
-      run: |
-        docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/your-repo-name:latest
+    
 
 
 
