@@ -23,11 +23,11 @@ jobs:
         aws-account_id: ${{ secrets.AWS_ACCOUNT_ID }}
         aws-region: us-east-1
 
-    - name: Log in to Amazon ECR
+    - name: Log in to Amazon ECR push to mysql
       run: |
        ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mysql
 
-        # Build the webapp image
+        # Build the mysql image
         docker build -t mysql .
         
         # Tag the image for ECR
@@ -39,7 +39,7 @@ jobs:
           docker push $ECR_URI:latest
 
 
-    - name: Log in to Amazon ECR
+    - name: Log in to Amazon ECR push to webapp
       run: |
        ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/webapp
 
