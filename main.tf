@@ -60,7 +60,7 @@ resource "aws_security_group" "ec2_sg" {
 
 # Create an EC2 instance
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0ebfd941bbafe70c6"  # Amazon Linux 2 AMI (update if needed)
+  ami           = "ami-0ebfd941bbafe70c6"  # Amazon Linux 2 AMI 
   instance_type = "t2.micro"
   key_name      = "lab"
 
