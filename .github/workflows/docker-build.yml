@@ -1,38 +1,43 @@
-name: Build and Push to Amazon ECR
+name: Build and Push Docker Image to ECR
 
+# Trigger the workflow on push to the master branch
 on:
   push:
     branches:
-      - main  # This ensures the workflow runs only when merging to the master branch
+      - main
 
 jobs:
   build:
-    name: Build and Push Docker Images
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Log in to Amazon ECR
+      # Step 2: Log in to Amazon ECR
+      - name: Login to Amazon ECR
         id: login-ecr
-        run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: ${{ secrets.AWS_REGION }}
 
-      - name: Build Docker image for web application
-        run: |
-          docker build -t webapp .
-          docker tag webapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/webapp:latest
+      # Step 3: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Push Docker image to ECR (Web App)
+      # Step 4: Build and push the Docker image to ECR
+      - name: Build and push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/webapp:latest
+          # Define the image URI
+          IMAGE_URI=${{ secrets.ECR_REPOSITORY_URL }}:latest
 
-      - name: Build Docker image for MySQL
-        run: |
-          docker build -t mysql ./mysql
-          docker tag mysql:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mysql:latest
+          # Build the Docker image
+          docker build -t $IMAGE_URI .
 
-      - name: Push Docker image to ECR (MySQL)
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mysql:latest
+          # Push the Docker image to Amazon ECR
+          docker push $IMAGE_URI
+
+      # Step 5: Log the pushed image URI
+      - name: Output image URI
+        run: echo "Pushed Docker image: ${{ secrets.ECR_REPOSITORY_URL }}:latest"
