@@ -3,7 +3,7 @@ name: Build and Push to Amazon ECR
 on:
   push:
     branches:
-      - master  # This ensures the workflow runs only when merging to the master branch
+      - main  # This ensures the workflow runs only when merging to the master branch
 
 jobs:
   build:
