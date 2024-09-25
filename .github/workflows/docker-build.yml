@@ -38,6 +38,26 @@ jobs:
         # Push the image to ECR
           docker push $ECR_URI:latest
 
+
+    - name: Log in to Amazon ECR
+      run: |
+       ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/webapp
+
+        # Build the webapp image
+        docker build -t webapp .
+        
+        # Tag the image for ECR
+        docker tag webapp:latest $ECR_URI:latest
+        
+         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URI
+
+        # Push the image to ECR
+          docker push $ECR_URI:latest
+
+
+
+          
+
     
 
 
