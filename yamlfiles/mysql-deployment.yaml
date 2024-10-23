@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: 657093102493.dkr.ecr.us-east-1.amazonaws.com/mysql:latest   # ECR image
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "password"
+        - name: MYSQL_DATABASE
+          value: "employees" 
+        ports:
+        - containerPort: 3306
+      imagePullSecrets:
+        - name: ecr-secret
