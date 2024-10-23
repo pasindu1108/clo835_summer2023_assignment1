@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:  # 
+      containers:
+      - name: web
+        image: 657093102493.dkr.ecr.us-east-1.amazonaws.com/webapp:latest
+        env:
+          - name: DB_HOST
+            value: "mysql"  
+          - name: DB_USER
+            value: "root"
+          - name: DB_PASSWORD
+            value: "your_mysql_password"
+          - name: DB_NAME
+            value: "employees"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: ecr-secret
