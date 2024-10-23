@@ -1,2 +1,11 @@
-GitHub repo with the application and GitHub actions workflow that builds docker images and pushes them to Amazon ECR
-and Terraform code that creates Amazon ECR and Amazon EC2.
+CLO 835 Assignment 2 Repository
+
+kubectl apply -f mysql-pod.yaml
+kubectl apply -f mysql-service.yaml
+kubectl apply -f mysql-deployment.yaml
+
+kubectl apply -f web-pod.yaml
+kubectl apply -f web-service.yaml
+kubectl apply -f web-deployment.yaml
+kubectl apply -f web-replicaset.yaml
+
