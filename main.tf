@@ -70,7 +70,7 @@ resource "aws_instance" "ec2_instance" {
   connection {
     type        = "ssh"
     user        = "ec2-user"               # Default user for Amazon Linux
-    private_key = file("lab.pem")  # Path to your SSH private key
+    private_key = file("lab.pem") # Path to your SSH private key
     host        = self.public_ip
   }
   provisioner "remote-exec" {
